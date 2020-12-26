@@ -7,6 +7,8 @@ option(BUILD_TESTS "Build tests" ON)
 option(BUILD_DOCS "Build documentation" OFF)
 option(BUILD_COVERAGE "Build code coverage" OFF)
 
+
+
 set(
   HUNTER_CACHE_SERVERS
   "https://github.com/bmstu-iu8-cpp-sem-3/hunter-cache"
@@ -27,7 +29,11 @@ string(APPEND CMAKE_CXX_FLAGS " -Wno-unused-command-line-argument")
 string(APPEND CMAKE_CXX_FLAGS " -Wshadow -Wnon-virtual-dtor")
 
 hunter_add_package(GTest)
+hunter_add_package(Beast)
+hunter_add_package(nlohmann_json)
 find_package(GTest CONFIG REQUIRED)
+find_package(Beast CONFIG REQUIRED)
+find_package(nlohmann_json 3.2.0 REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
   # enum your files and delete this comment
@@ -43,7 +49,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   "$<INSTALL_INTERFACE:include>"
 )
 
-target_link_libraries(demo ${PROJECT_NAME})
+target_link_libraries(demo ${PROJECT_NAME} Beast::Beast nlohmann_json::nlohmann_json)
 
 if(BUILD_TESTS)
   add_executable(tests
